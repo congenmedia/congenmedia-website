@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Edit Video With an AI Agent (Free Open-Source Workflow)</title>
+<meta name="description" content="A practical guide to editing video with an AI agent using free tools: Auto-Editor, Whisper, FFmpeg and HyperFrames, plus where human editors still matter.">
+<link rel="canonical" href="https://www.congenmedia.com/blog/edit-video-with-ai-agent">
+<meta property="og:type" content="article"><meta property="og:title" content="How to Edit Video With an AI Agent (Free Open-Source Workflow)"><meta property="og:description" content="A practical guide to editing video with an AI agent using free tools: Auto-Editor, Whisper, FFmpeg and HyperFrames, plus where human editors still matter."><meta property="og:url" content="https://www.congenmedia.com/blog/edit-video-with-ai-agent"><meta property="og:image" content="https://www.congenmedia.com/icon-512.png"><meta name="twitter:card" content="summary">
+<link rel="icon" href="/favicon.ico"><meta name="theme-color" content="#0b0b1a">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6871155250668846" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "@id": "https://www.congenmedia.com/blog/edit-video-with-ai-agent#post", "mainEntityOfPage": "https://www.congenmedia.com/blog/edit-video-with-ai-agent", "headline": "How to Edit Video With an AI Agent (Free Open-Source Workflow)", "description": "A practical guide to editing video with an AI agent using free tools: Auto-Editor, Whisper, FFmpeg and HyperFrames, plus where human editors still matter.", "datePublished": "2026-11-08", "dateModified": "2026-11-08", "image": "https://www.congenmedia.com/icon-512.png", "inLanguage": "en", "author": {"@type": "Person", "@id": "https://www.congenmedia.com/founder#person", "name": "Asim Yousafzai", "url": "https://www.congenmedia.com/founder"}, "publisher": {"@type": "Organization", "@id": "https://www.congenmedia.com/#org", "name": "Con-Gen Media", "logo": {"@type": "ImageObject", "url": "https://www.congenmedia.com/icon-512.png"}}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.congenmedia.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://www.congenmedia.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "How to Edit Video With an AI Agent (Free Open-Source Workflow)", "item": "https://www.congenmedia.com/blog/edit-video-with-ai-agent"}]}]}</script>
+<style>:root{--bg:#0b0b1a;--card:#14162b;--fg:#f2f3fa;--mut:#a3a8c3;--ac:#3b6cff;--ac2:#b44cff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.75 Poppins,system-ui,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:28px 18px}nav{display:flex;justify-content:space-between;align-items:center;gap:16px}nav a{color:var(--fg);text-decoration:none;font-weight:700}nav span a{font-weight:400;margin-left:16px;font-size:15px}
+h1{font-size:clamp(32px,6vw,48px);line-height:1.1;margin:44px 0 10px;text-wrap:balance}h2{font-size:26px;line-height:1.25;margin:42px 0 10px}h3{font-size:19px;margin:28px 0 6px}
+a{color:#8fb0ff}.meta{color:var(--mut);font-size:14px}.lead{font-size:19px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:16px 0}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid #2a2e4d;vertical-align:top}
+pre{background:var(--card);padding:14px 16px;border-radius:12px;overflow-x:auto;font-size:14px;line-height:1.6}blockquote{margin:16px 0;padding:12px 18px;border-left:3px solid var(--ac);background:var(--card);border-radius:0 12px 12px 0}
+.cta{background:var(--card);border-radius:20px;padding:6px 24px 14px;margin-top:44px}.cta h2{margin-top:18px}footer{color:var(--mut);font-size:13px;margin-top:48px}</style></head><body><div class="w">
+<nav><a href="/">Con-Gen Media</a><span><a href="/blog/">Blog</a><a href="/services">Services</a><a href="/work">Work</a></span></nav>
+<article><h1>How to Edit Video With an AI Agent: A Free, Open-Source Workflow</h1>
+<p class="meta">By <a href="/founder">Asim Yousafzai</a>, founder of Con-Gen Media · 8 November 2026</p>
+<p class="lead">AI agents can now cut silences, write captions and render motion graphics from a plain-English request. They still can't decide what makes your video worth watching. This guide shows the free, open-source stack behind agent-based editing, the order to run it in, and where a human editor still has to step in.</p>
+
+<h2>What "editing with an AI agent" means</h2>
+<p>Most AI video apps give you one button that produces one result. A coding agent such as Claude Code or Codex works differently. It runs command-line tools on your own files, checks the output, and tries again. You describe the edit, and the agent decides which tool to call and in what order.</p>
+<p>That matters for three reasons. Your footage can stay on your machine. Every step produces a file you can inspect, such as a transcript or a caption sheet. And when one step is wrong, you can fix that step and rerun it, rather than regenerating the entire video and hoping for a better roll of the dice.</p>
+<p>The tradeoff is that you are working with tools, not a polished timeline. You need to be comfortable installing software, and you need to review what comes out.</p>
+
+<h2>The free stack, tool by tool</h2>
+<table>
+<thead><tr><th>Job</th><th>Tool</th><th>Licence</th></tr></thead>
+<tbody>
+<tr><td>Remove dead air and silences</td><td>Auto-Editor</td><td>Public domain</td></tr>
+<tr><td>Turn speech into a timed transcript</td><td>Whisper</td><td>MIT</td></tr>
+<tr><td>Cut, join, encode and burn in captions</td><td>FFmpeg</td><td>Free and open source (LGPL/GPL)</td></tr>
+<tr><td>Motion graphics written as HTML</td><td>HyperFrames</td><td>Apache 2.0</td></tr>
+<tr><td>Motion graphics written as React</td><td>Remotion</td><td>Free for individuals and small teams; see below</td></tr>
+</tbody>
+</table>
+<p>The tools are free, but the agent driving them usually isn't. Claude Code and Codex both run on paid plans or API usage, so check current pricing before you build a routine around one.</p>
+<p>One licensing detail catches agencies out. Remotion's free licence covers individuals, non-profits and for-profit organisations with up to three employees. Larger companies need a paid company licence. HyperFrames is Apache 2.0, so it doesn't have that headcount limit. Read each licence yourself before using a tool on client work.</p>
+
+<h2>A five-step workflow that holds up</h2>
+<h3>1. Do the first pass on silence</h3>
+<p>Dead air is the most tedious part of any talking-head edit and the safest part to automate. Auto-Editor analyses audio loudness and removes the quiet stretches:</p>
+<pre><code>auto-editor interview.mp4 --margin 0.2s</code></pre>
+<p>The margin keeps a little breathing room around each sentence. Without it, speech sounds clipped and rushed. Treat the output as a rough cut, because a loudness check can't tell an awkward pause from a dramatic one.</p>
+
+<h3>2. Build the transcript</h3>
+<p>Run Whisper on the rough cut, not the original, so the timestamps match the footage you are keeping:</p>
+<pre><code>whisper interview_ALTERED.mp4 --model small --output_format srt</code></pre>
+<p>The transcript is now the most useful document in the project. Your agent can read it to find the strongest opening line, flag repeated takes, or suggest where B-roll belongs. Check names, brand terms and numbers by hand, since those are the words speech recognition most often gets wrong.</p>
+
+<h3>3. Let the agent propose the structure</h3>
+<p>Here is where the agent earns its place. Give it the transcript and a specific brief:</p>
+<blockquote>Read this transcript. Find the single sentence that would stop a founder from scrolling. Propose a 30-second cut that opens on it, keep only lines that support it, and list the timestamps.</blockquote>
+<p>Ask for timestamps rather than a finished video. A list takes seconds to review, while a bad render wastes minutes. Approve the structure first and render afterwards.</p>
+
+<h3>4. Add motion graphics as code</h3>
+<p>HyperFrames turns HTML, CSS and animation into MP4 files. Its renderer captures each frame in headless Chrome and encodes with FFmpeg, so the same input produces the same video. It needs Node.js 22 or newer plus FFmpeg:</p>
+<pre><code>npx hyperframes skills update
+npx hyperframes init my-video
+npx hyperframes preview
+npx hyperframes render</code></pre>
+<p>The first command teaches your coding agent how to use the framework. After that you can ask for things in plain language: a lower third with a name and title, a kinetic headline, an animated price comparison. Because a composition is just an HTML file, changing a word or a colour is a small edit instead of a new generation.</p>
+
+<h3>5. Burn in captions and export per platform</h3>
+<p>FFmpeg handles the final assembly:</p>
+<pre><code>ffmpeg -i final.mp4 -vf subtitles=interview_ALTERED.srt -c:a copy final_captions.mp4</code></pre>
+<p>Before you post, place the frame over a safe-zone guide so captions don't sit under the interface buttons. Our free <a href="/shop/files/ConGen_SafeZone_Overlay_1080x1920.png">1080×1920 safe-zone overlay</a> and <a href="/shop/files/ConGen_Export_Settings.pdf">export settings sheet</a> are made for that final check.</p>
+
+<h2>Where agents still fall short</h2>
+<p><strong>Taste.</strong> An agent can find a sentence that is structurally a good hook. It can't feel that your audience has heard that line a hundred times this month.</p>
+<p><strong>Rhythm.</strong> Cutting to the beat, holding a reaction shot one moment longer, letting a joke land: these are judgment calls, and they are often the difference between a video people finish and one they abandon.</p>
+<p><strong>Sound.</strong> Music choice, level balance and well-placed effects still need human ears.</p>
+<p><strong>Rights and truth.</strong> You remain responsible for the footage, music and claims in the video. If an agent writes on-screen statistics, verify every one of them before it goes live.</p>
+<p>The realistic gain is removing the hours of mechanical work so more of your attention goes to these decisions. Used that way, an agent makes a good editor faster. It won't make a weak concept good.</p>
+
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Prompting for "a viral video".</strong> Vague briefs produce generic edits. Name the audience, the length, the opening line and the single takeaway.</li>
+<li><strong>Rendering before approving.</strong> Review the transcript and the shot list first. Text is cheap to change and renders aren't.</li>
+<li><strong>Skipping the watch-through.</strong> Watch every export with sound on, start to finish, and once more on a phone.</li>
+<li><strong>Letting the agent overwrite originals.</strong> Keep raw footage read-only and have the agent write to a separate output folder.</li>
+</ul>
+
+<h2>Frequently asked questions</h2>
+<h3>Can AI edit a video completely on its own?</h3>
+<p>It can produce a finished file on its own, but quality still depends on human review. Silence removal, transcription and templated graphics automate well. Story, pacing and sound benefit most from an editor's judgment.</p>
+<h3>Is this workflow really free?</h3>
+<p>Auto-Editor, Whisper, FFmpeg and HyperFrames cost nothing to use. Coding agents generally require a paid plan or API usage, and Remotion requires a company licence for larger for-profit organisations.</p>
+<h3>Do I need to know how to code?</h3>
+<p>Not much, because the agent writes the code. You do need to install the tools, run basic commands and be able to tell when something has gone wrong.</p>
+<h3>Which tool should I start with?</h3>
+<p>Start with Auto-Editor on one talking-head clip. It is a single command with an immediately visible result, and it will tell you quickly whether this way of working suits you.</p>
+
+<div class="cta">
+<h2>Rather hand it to a team?</h2>
+<p>Con-Gen Media combines AI-assisted workflows with human editors for reels, YouTube videos and motion graphics, for brands and creators worldwide. See our <a href="/services">services</a>, browse recent <a href="/work">work</a>, or grab free editing resources from the <a href="/shop">shop</a>.</p>
+</div>
+</article>
+<footer>© 2026 Con-Gen Media · <a href="/">Home</a> · <a href="/founder">Founder</a> · <a href="/shop">Shop</a></footer>
+</div></body></html>
