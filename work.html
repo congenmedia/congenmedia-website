@@ -296,7 +296,7 @@ h1,h2{overflow-wrap:anywhere}
 .team-stage .t .bub,.team-stage .t>*{padding:10px!important;gap:8px!important;font-size:12px}.team-stage .t b{font-size:13px}.team-stage .t small{font-size:10.5px}
 .svc{grid-template-columns:1fr 1fr!important;gap:10px!important}.s{padding:14px!important;gap:8px!important;border-radius:18px!important}.s h3{font-size:14.5px!important;line-height:1.2}.s p{font-size:12px!important;line-height:1.45}.s .ico{width:40px;height:40px;border-radius:12px}.s .ico svg{width:20px;height:20px}
 .stats{gap:14px 22px!important;margin-top:20px!important}.stats b{font-size:24px!important}.stats span{font-size:11px}.tabs{margin-top:16px!important;gap:6px!important}.tabs .tab{padding:8px 14px!important;font-size:13px!important}
-.fan{height:520px!important}.fan .card{width:min(250px,66vw)!important;border-radius:20px!important}.fan.land{height:300px!important}.fan.land .card{width:88%!important;border-radius:16px!important}
+.fan{height:520px!important}.fan .card{width:min(250px,66vw)!important;border-radius:20px!important}.fan.land{height:auto!important;display:flex;flex-direction:column;gap:14px;padding:6px 0}.fan.land .card{position:relative!important;top:auto!important;left:auto!important;width:100%!important;transform:none!important;border-radius:16px!important}
 .ez{max-width:280px;margin:0 auto}#ezsvg{width:100%!important;height:auto!important;display:block}
 .grade{aspect-ratio:1/1!important}.board{height:380px!important}
 .lv{grid-template-columns:1fr 1fr!important;gap:10px!important}.lv>*{zoom:.56}
@@ -339,7 +339,7 @@ h1,h2{overflow-wrap:anywhere}
 @media (max-width:980px){.svc{grid-template-columns:repeat(2,minmax(0,1fr))}.work,.cta{grid-template-columns:1fr}.pk,.shop{grid-template-columns:1fr}.proc{grid-template-columns:repeat(2,minmax(0,1fr))}.links{display:none}.fan{height:480px}}
 @media (max-width:640px){section{padding-block:76px}.svc,.proc{grid-template-columns:1fr}.hide-m{display:none!important}.hero{min-height:auto;padding-block:120px 90px}.fl.mini{transform:scale(.72)}.fl.b2{left:6%!important;bottom:6%!important}.team-stage{height:560px}.collage{height:380px;transform:scale(.82);transform-origin:left top}.fan .card{width:200px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-/*cg-land*/.fan.land .card{width:min(430px,78%);border-radius:18px}</style>
+/*cg-land*/.fan.land .card{width:min(560px,96%);border-radius:18px}</style>
 
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
 <style id="cg-reel-css">
@@ -601,7 +601,7 @@ fanSet("reels");
 function fanLay(){const cs=[...fan.children],n=cs.length,mid=(n-1)/2;cs.forEach((c,i)=>{const o=i-mid;c.style.zIndex=10-Math.abs(Math.round(o));c.style.transform=`translate(-50%,-50%) translateX(${o*28}%) rotate(${o*7}deg) scale(${1-Math.abs(o)*.06})`})}
 let fdx=0;fan.style.touchAction='pan-y';fan.style.cursor='grab';fan.addEventListener('pointerdown',e=>{fan.setPointerCapture(e.pointerId);let sx=e.clientX;fan.style.cursor='grabbing';window.__fanHold=true;const mv=ev=>{const dx=ev.clientX-sx;fan.style.translate=(dx*.35)+'px 0';fan.style.rotate=(dx*.01)+'deg';if(Math.abs(dx)>90){if(dx<0)fan.appendChild(fan.firstElementChild);else fan.prepend(fan.lastElementChild);fanLay();sx=ev.clientX}};const up=()=>{fan.style.translate='0 0';fan.style.rotate='0deg';fan.style.cursor='grab';window.__fanHold=false;fan.removeEventListener('pointermove',mv)};fan.addEventListener('pointermove',mv);fan.addEventListener('pointerup',up,{once:true});fan.addEventListener('pointercancel',up,{once:true})});
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));fanSet(t.dataset.set)}));
-let fi=0;setInterval(()=>{const cs=[...fan.children];if(cs.length<2||window.__fanHold)return;fan.appendChild(cs[0]);const n=cs.length,mid=(n-1)/2;[...fan.children].forEach((c,i)=>{const o=i-mid;c.style.zIndex=10-Math.abs(Math.round(o));c.style.transform=`translate(-50%,-50%) translateX(${o*28}%) rotate(${o*7}deg) scale(${1-Math.abs(o)*.06})`})},3200);
+let fi=0;setInterval(()=>{const cs=[...fan.children];if(cs.length<2||window.__fanHold||(fan.classList.contains("land")&&innerWidth<=980))return;fan.appendChild(cs[0]);const n=cs.length,mid=(n-1)/2;[...fan.children].forEach((c,i)=>{const o=i-mid;c.style.zIndex=10-Math.abs(Math.round(o));c.style.transform=`translate(-50%,-50%) translateX(${o*28}%) rotate(${o*7}deg) scale(${1-Math.abs(o)*.06})`})},3200);
 // shop waitlists
 document.querySelectorAll(".tool").forEach(t=>{const b=t.querySelector(".row button"),f=t.querySelector(".wait");if(!b||!f)return;b.addEventListener("click",()=>{f.classList.toggle("on");f.querySelector("input").focus()});f.addEventListener("submit",e=>{e.preventDefault();f.classList.remove("on");b.textContent="You're on the list";b.classList.add("done")})});
 // packages → contact
