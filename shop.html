@@ -342,7 +342,15 @@ h1,h2{overflow-wrap:anywhere}
 </style>
 
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
-</head>
+<style id="cg-reel-css">
+.hero.is-reel{display:block;min-height:0;padding:0;background:#F5F7FC;background-image:none}
+#top.is-reel .fl,#top.is-reel .hint,.hero.is-reel .hero-c .eyebrow,.hero.is-reel .hero-c>br,.hero.is-reel .big,.hero.is-reel .hero-sub{display:none!important}
+.hero-reel{display:flex;justify-content:center;width:100%;height:min(56.25vw,calc(100vh - 190px));min-height:200px}
+.hero-reel video{display:block;height:100%;width:auto;max-width:100%;aspect-ratio:16/9;object-fit:contain;
+-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.hero.is-reel .hero-c{padding:18px 16px 40px}
+@media(max-width:720px){#top.is-reel{padding:0!important}.hero-reel{height:56.25vw}.hero-reel video{width:100%;height:auto}.hero.is-reel .hero-c{padding:14px 16px 32px}}
+</style></head>
 <body>
 <nav><div class="wrap">
  <a class="brand" href="/" aria-label="Con-Gen Media"><span class="bav"><img src="data:image/png;base64,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" alt=""></span><span class="btx"><b>Con-Gen Media</b><small>Edits that stop the scroll</small></span></a>
@@ -350,7 +358,7 @@ h1,h2{overflow-wrap:anywhere}
  <div style="display:flex;gap:10px;align-items:center"><a class="btn dark" href="#contact">Let's talk</a><button class="menu" id="menuBtn" aria-label="Open menu" aria-expanded="false"><i></i><i></i></button></div>
 </div></nav>
 
-<header class="hero grid-bg" id="top" data-pg="home">
+<header class="hero grid-bg is-reel" id="top" data-pg="home"><div class="hero-reel"><video src="/showreel.mp4" poster="/showreel-poster.jpg" autoplay muted loop playsinline preload="auto" aria-label="Con-Gen Media showreel"></video></div>
  <!-- floating editor canvas -->
  <div class="fl hide-m" style="left:6%;top:16%;animation-delay:.1s"><div class="win" style="--r2:-2deg;transform:rotate(-4deg)"><div class="bar"><i></i><i></i><i></i></div><div class="tl"><div style="background:#7c3aed;width:92%"></div><div style="background:#2f6bff;width:64%"></div><div style="background:#ec4899;width:40%"></div><div style="background:#16a34a;width:80%"></div></div></div></div>
  <div class="fl mini" style="left:26%;top:14%;animation-delay:.2s"><div><div class="tile"><b style="background:#2a0e48;color:#d9a8ff">Ae</b></div></div></div>
