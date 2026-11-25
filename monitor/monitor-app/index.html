@@ -218,24 +218,27 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 function KEYV(){let k=store.get('cgm-key');if(!k){k=T(prompt('Enter your Agent Monitor key')||'');if(k)store.set('cgm-key',k)}return k||''}
 
 /* ---------------- agents ---------------- */
-const TEAMS=[['all','All'],['outreach','Outreach'],['inbox','Inbox'],['social','Social'],['creative','Creative'],['growth','SEO & News'],['mgmt','Command'],['security','Security']];
+const TEAMS=[['all','All'],['board','Board'],['mgmt','Command'],['god','God Squad'],['outreach','Outreach'],['inbox','Inbox'],['creative','Creative Chiefs'],['thumb','Thumbnail team'],['video','Video & Motion'],['sound','Sound & Music'],['colour','Colour team'],['growth','Research & SEO'],['social','Social'],['security','Security']];
 const S=(l,rx)=>[l,rx];
 const OUT=[S('Pick lead',/pick|next lead|queue|lead:/i),S('Study',/research|analy|study|channel|video/i),S('Write',/draft|writ|subject|spam|compose/i),S('Send',/SENT/),S('Log',/log|sheet|saved|recorded/i)];
-const AG=[
+const BASE=[
+{id:'ak',name:'AK - Board Director',team:'board',em:'👑',rx:/^(AK - Board Director|Board Director)/,win:40,steps:[S('Check A-Z',/check|silent|decide/i),S('Decide',/decision|orders?|warn/i),S('Improve',/improve|replaced|daily/i)],kind:'items'},
+{id:'eng',name:'Agent Engine',team:'board',em:'⚙️',rx:/^Agent Engine/,win:30,steps:[S('Pick due agents',/due/i),S('Run',/ran/i)]},
+{id:'lg',name:'Lead Gate',team:'outreach',em:'🚧',rx:/^Lead Gate/,win:60,steps:[S('Check face',/checked/i),S('Check country',/country/i),S('Pass / reject',/PASS|reject/i)],kind:'items'},
 {id:'ot',name:'Outreach · Thumbnail',team:'outreach',em:'🖼️',rx:/^Outreach \(Thumbnail team\)/,win:90,steps:OUT,kind:'sent'},
 {id:'ov',name:'Outreach · Video',team:'outreach',em:'🎬',rx:/^Outreach \(Video team\)/,win:90,steps:OUT,kind:'sent'},
 {id:'ls',name:'Lead Search',team:'outreach',em:'🔎',rx:/^(Lead search|Lead finder)/,win:45,steps:[S('Search',/search|scan|query|finder/i),S('Check',/check|verify|filter|skipp|off-niche|country|gate/i),S('Save',/new lead|added|saved|found|\+\d/i)],kind:'leads'},
-{id:'gs',name:'God Squad',team:'outreach',em:'🧠',rx:/^God Squad/,win:150,steps:[S('Study',/study|analy|research|channel/i),S('Psychology',/psych|angle|hook/i),S('Brief',/brief|plan|subject/i),S('Hand-off',/hand|send|ready|done/i)]},
+{id:'gs',name:'God Squad (outreach)',team:'outreach',em:'🧠',rx:/^God Squad/,win:150,steps:[S('Study',/study|analy|research|channel/i),S('Psychology',/psych|angle|hook/i),S('Brief',/brief|plan|subject/i),S('Hand-off',/hand|send|ready|done/i)]},
 {id:'fu',name:'Follow-up',team:'inbox',em:'🔁',rx:/^Follow-up/,win:90,steps:[S('Find due',/due|find|pick|queue/i),S('Write',/draft|writ|subject/i),S('Send',/SENT/),S('Log',/log|sheet|saved/i)],kind:'sent'},
 {id:'rw',name:'Reply Watch',team:'inbox',em:'📥',rx:/^Reply Watch/,win:30,steps:[S('Check inbox',/check|inbox|scan|watch(?!.*REPLY)/i),S('Read',/REPLY from/),S('Classify',/interest:/i),S('Hold for you',/held|hold|needs|approval|auto-replied/i)],kind:'replies'},
 {id:'cc',name:'Comment Replier',team:'social',em:'💭',rx:/^Comment/,win:40,steps:[S('Read',/@/),S('Write',/draft|writ/i),S('Reply',/REPLIED|FAILED/),S('Log',/log|sheet/i)],kind:'comments'},
 {id:'sw',name:'Social Watch',team:'social',em:'📊',rx:/^Social/,win:30,steps:[S('Read stats',/./),S('Compare',/\+\d|-\d/),S('Log',/log|sheet|saved/i)]},
 {id:'cw',name:'Channel Watch',team:'social',em:'📺',rx:/^Channel Watch/,win:30,steps:[S('Read',/./),S('Compare',/\+\d|-\d/),S('Log',/log|sheet|saved/i)]},
-{id:'cr',name:'Creative Dept',team:'creative',em:'🎨',rx:/^Creative Dept/,win:90,steps:[S('Plan',/plan|brief|idea/i),S('Design',/design|render|edit|thumb|video/i),S('Check',/check|review|qc|rate/i),S('Deliver',/deliver|ready|upload|done/i)]},
+{id:'cr',name:'Creative Dept (cloud jobs)',team:'creative',em:'🎨',rx:/^Creative Dept/,win:90,steps:[S('Plan',/plan|brief|idea/i),S('Design',/design|render|edit|thumb|video/i),S('Check',/check|review|qc|rate/i),S('Deliver',/deliver|ready|upload|done/i)]},
 {id:'seo',name:'SEO Specialist',team:'growth',em:'🔍',rx:/^SEO/i,win:120,steps:[S('Audit',/^audit/i),S('Keywords',/^keyword/i),S('Fix',/^fix/i),S('Publish',/^publish|^fix \+ publish/i),S('Track',/^track/i)],kind:'items',planned:1},
 {id:'news',name:'AI News Scout',team:'growth',em:'📰',rx:/^(AI News|News)/i,win:120,steps:[S('Scan',/^scan/i),S('Pick',/^pick/i),S('Summarise',/^pick \+ summar|^summar/i),S('Post',/^post/i)],kind:'items',planned:1},
 {id:'tools',name:'New Tools Scout',team:'growth',em:'🧰',rx:/^(New Tool|Tool Scout|Tools?:)/i,win:120,steps:[S('Spot',/^spot/i),S('Test',/^test/i),S('Review',/^review/i),S('Share',/^review \+ share|^share/i)],kind:'items',planned:1},
-{id:'rv',name:'Strict Reviewer',team:'mgmt',em:'🧐',rx:/^Reviewer/,win:90,steps:[S('Collect',/collect|read|queue/i),S('Judge',/judg|check|review/i),S('Decide',/approv|reject|reply/i),S('Push',/push|warn|nudge/i)]},
+{id:'rv',name:'Decide Chief',team:'mgmt',em:'⚖️',rx:/^(Reviewer|Decide Chief)/,win:90,steps:[S('Collect',/collect|read|queue/i),S('Judge',/judg|check|review/i),S('Decide',/approv|reject|reply/i),S('Push',/push|warn|nudge/i)]},
 {id:'hp',name:'Head of Performance',team:'mgmt',em:'📈',rx:/^Head of Performance/,win:90,steps:[S('Collect',/./),S('Rate',/rating|score|rate/i),S('Warn / reward',/warn|cut|promot|reward/i)]},
 {id:'om',name:'Ops Manager',team:'mgmt',em:'🛠️',rx:/^Ops Manager/,win:40,steps:[S('Scan',/scan|check|watch/i),S('Find cause',/cause|why|inactive|stuck/i),S('Reactivate',/restart|reactivat|fix|kick/i)]},
 {id:'tb',name:'Trend Brain',team:'growth',em:'🧠',rx:/^Trend Brain/,win:60,steps:[S('Watch top videos',/top videos|videos/i),S('See thumbnails',/rules|thumb/i),S('Write rules',/new rules/i)],kind:'items'},
@@ -247,7 +250,17 @@ const AG=[
 {id:'sim',name:'Impersonation Hunter',team:'security',em:'🕵️',rx:/^(\[secImperson\]|Brand|Impersonation)/i,win:240,steps:[S('Scan',/./),S('Detect',/lookalike|found|alert/i),S('Report',/./)],kind:'items'},
 {id:'sg',name:'Security Guard',team:'security',em:'🛡️',rx:/^Security Guard/,win:70,steps:[S('Scan',/scan|check|watch/i),S('Detect',/alert|suspic|detect|found/i),S('Fix',/fix|block|revoke|secure/i),S('Report',/report|log/i)],kind:'items'}
 ];
-const BYID={};AG.forEach(a=>BYID[a.id]=a);
+let AG=BASE.slice();const BYID={};AG.forEach(a=>BYID[a.id]=a);
+/* registry agents: every llm agent in the 'Agent Registry' tab shows up here automatically */
+const REM={'God Squad':['god','🧠'],'Creative':['creative','🎬'],'Creative - Thumbnail team':['thumb','🖼️'],'Creative - Video and Motion team':['video','🎞️'],'Creative - Sound team':['sound','🎧'],'Creative - Music team':['sound','🎵'],'Creative - Colour team':['colour','🎨']};
+const rxe=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function buildReg(){
+  const R=(D.reg||[]).slice(1).filter(r=>T(r[0])&&T(r[4])==='llm'&&T(r[0])!=='AK-00');
+  const extra=R.map(r=>{const m=REM[T(r[2])]||['creative','✨'];const every=Number(T(r[7]))||180;
+    return {id:'r-'+T(r[0]),name:T(r[1]),team:m[0],em:m[1],rx:new RegExp('^'+rxe(T(r[1]))+':'),win:Math.max(60,every*2),reg:{id:T(r[0]),job:T(r[5]),rep:T(r[3]),status:T(r[8]),lastRun:T(r[9]),out:T(r[10]),rating:T(r[11])},
+      steps:[S('Read brief + skills',/./),S('Do the job',/audit|card|research|brief|review|concept|plan|found|wrote|checked|posted|built|scored|analy|design/i),S('Report to team',/team|board|alert|order|note|update|flag/i)],kind:'items'}});
+  AG=BASE.concat(extra);for(const k in BYID)delete BYID[k];AG.forEach(a=>BYID[a.id]=a);
+}
 
 /* ---------------- state ---------------- */
 let mcp=null,ready=false,busy=false,writing=false,view='live',teamF='all',repF='all',armed=null,armT=0,openId=null,stepSel=null,first=true;
@@ -274,15 +287,15 @@ function mcpErr(e){const c=e&&e.code;
 
 const NN={};
 async function tail(tab,c1,c2,keep,fresh){
-  let n=NN[tab];
-  if(n){try{const s=Math.max(1,n-keep+1);const r=await rd(`${tab}!${c1}${s}:${c2}${s+keep+799}`,fresh);if(r.length&&r.length<keep+800){n=s-1+r.length;NN[tab]=n;return{rows:r.slice(-keep),n}}}catch(e){}NN[tab]=0}
-  const a=await rd(`${tab}!A1:A400000`,fresh);n=a.length;NN[tab]=n;if(!n)return{rows:[],n:0};
+  let n=NN[tab]||Number(store.get('nn-'+tab))||0;
+  if(n){try{const s=Math.max(1,n-keep+1);const r=await rd(`${tab}!${c1}${s}:${c2}${s+keep+799}`,fresh);if(r.length&&r.length<keep+800){n=s-1+r.length;NN[tab]=n;store.set('nn-'+tab,n);return{rows:r.slice(-keep),n}}}catch(e){}NN[tab]=0}
+  const a=await rd(`${tab}!A1:A400000`,fresh);n=a.length;NN[tab]=n;store.set('nn-'+tab,n);if(!n)return{rows:[],n:0};
   const s2=Math.max(1,n-keep+1);return{rows:await rd(`${tab}!${c1}${s2}:${c2}${n}`,fresh),n};
 }
 async function load(fresh){
   if(!mcp||busy)return;busy=true;meta.state=first?'loading':'refreshing';paintStatus();
   try{
-    const jobs={cl:tail('Cloud Log','A','B',400,fresh).then(x=>x.rows),cls:rd('Cloud Leads!A1:H3000',fresh),so:tail('Social Live','A','B',1,fresh).then(x=>x.rows.length?{a:[[x.rows[0][0]]],b:[[x.rows[0][1]]]}:null),bd:tail('Agent Board','A','H',140,fresh),plan:rd('50 Content Plan!A1:M200',fresh)};
+    const jobs={cl:tail('Cloud Log','A','B',400,fresh).then(x=>x.rows),cls:rd('Cloud Leads!A1:H3000',fresh),so:tail('Social Live','A','B',1,fresh).then(x=>x.rows.length?{a:[[x.rows[0][0]]],b:[[x.rows[0][1]]]}:null),bd:tail('Agent Board','A','H',140,fresh),plan:rd('50 Content Plan!A1:M200',fresh),reg:rd('Agent Registry!A1:L200',fresh)};
     const keys=Object.keys(jobs),res=await Promise.allSettled(keys.map(k=>jobs[k]));
     if(res.every(x=>x.status==='rejected'))throw res[0].reason;
     res.forEach((x,i)=>{if(x.status==='fulfilled')D[keys[i]]=x.value});
@@ -297,11 +310,14 @@ async function load(fresh){
 let LOG=[],BYAG={},REPS=[];
 function derive(){
   LOG=(D.cl||[]).map(r=>({t:T(r[0]),m:T(r[1])})).filter(r=>r.m&&valid(r.t));
+  buildReg();
   BYAG={};AG.forEach(a=>BYAG[a.id]=[]);
   LOG.forEach(r=>{const a=AG.find(x=>x.rx.test(r.m));r.ag=a?a.id:null;if(a)BYAG[a.id].push(r)});
   const today=day(Date.now());
   AG.forEach(a=>{
-    const L=BYAG[a.id],last=L[L.length-1];a.n=L.length;a.today=L.filter(r=>day(r.t)===today).length;a.last=last||null;
+    const L=BYAG[a.id];let last=L[L.length-1];
+    if(!last&&a.reg&&a.reg.lastRun&&valid(a.reg.lastRun)){last={t:new Date(a.reg.lastRun).toISOString(),m:a.name+': '+(a.reg.out||'ran')};}
+    a.n=L.length;a.today=L.filter(r=>day(r.t)===today).length;a.last=last||null;
     const age=last?Date.now()-new Date(last.t).getTime():Infinity;
     a.state=!last?(a.planned?'waiting':'silent'):age<a.win*6e4?'live':day(last.t)===today?'quiet':'silent';
     a.work=last&&age<3*6e4;
@@ -350,7 +366,7 @@ function track(a,big){
     return `<div class="stp ${c}${nx}${go}${big&&stepSel===i?' sel':''}" ${big?`data-step="${i}"`:''}>${a.sc[i]?`<span class="ct">${a.sc[i]}</span>`:''}<div class="nd">${c==='done'?'✓':i+1}</div><small>${esc(s[0])}</small></div>`}).join('')+'</div>';
 }
 const ST={live:'Active',quiet:'Quiet today',silent:'Silent',waiting:'Waiting'};
-const strip=m=>m.replace(/^(?:Reply Watch|Outreach|Follow-up|Comment|Lead search|Lead finder|Social|Channel Watch|Creative Dept|Reviewer|Security Guard|Ops Manager|Head of Performance|God Squad|AI News Scout|New Tool Scout|SEO Specialist|Trend Brain|Offer Strategist|Promise Keeper|Reference Hunter)\b\s*(?:\([^)]*\))?\s*:?\s*(?:\([^)]*\))?\s*/i,'');
+const strip=m=>m.replace(/^[A-Z][\w &()\/-]{2,60}?:\s*/,'').replace(/^(?:Reply Watch|Outreach|Follow-up|Comment|Lead search|Lead finder|Social|Channel Watch|Creative Dept|Reviewer|Security Guard|Ops Manager|Head of Performance|God Squad|AI News Scout|New Tool Scout|SEO Specialist|Trend Brain|Offer Strategist|Promise Keeper|Reference Hunter)\b\s*(?:\([^)]*\))?\s*:?\s*(?:\([^)]*\))?\s*/i,'');
 function nice(m){return cut(strip(m),200)}
 function card(a){
   const now=a.last?nice(a.last.m):(a.planned?'Not reporting yet — lights up when it logs its first run.':'No activity in the log.');
