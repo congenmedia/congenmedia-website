@@ -238,6 +238,12 @@ const AG=[
 {id:'rv',name:'Strict Reviewer',team:'mgmt',em:'🧐',rx:/^Reviewer/,win:90,steps:[S('Collect',/collect|read|queue/i),S('Judge',/judg|check|review/i),S('Decide',/approv|reject|reply/i),S('Push',/push|warn|nudge/i)]},
 {id:'hp',name:'Head of Performance',team:'mgmt',em:'📈',rx:/^Head of Performance/,win:90,steps:[S('Collect',/./),S('Rate',/rating|score|rate/i),S('Warn / reward',/warn|cut|promot|reward/i)]},
 {id:'om',name:'Ops Manager',team:'mgmt',em:'🛠️',rx:/^Ops Manager/,win:40,steps:[S('Scan',/scan|check|watch/i),S('Find cause',/cause|why|inactive|stuck/i),S('Reactivate',/restart|reactivat|fix|kick/i)]},
+{id:'tb',name:'Trend Brain',team:'growth',em:'🧠',rx:/^Trend Brain/,win:60,steps:[S('Watch top videos',/top videos|videos/i),S('See thumbnails',/rules|thumb/i),S('Write rules',/new rules/i)],kind:'items'},
+{id:'os',name:'Offer Strategist',team:'growth',em:'💡',rx:/^Offer Strategist/,win:240,steps:[S('Read research',/./),S('Design offers',/offers/i),S('Add to Playbook',/added/i)],kind:'items'},
+{id:'pk',name:'Promise Keeper',team:'mgmt',em:'⏰',rx:/^Promise Keeper/,win:420,steps:[S('Check promises',/promises/i),S('Check results',/leads in 24h/i),S('Alert',/./)]},
+{id:'sot',name:'OAuth & Takeover Watch',team:'security',em:'🔐',rx:/^(\[secOauth\]|OAuth Watch|OAuth)/i,win:120,steps:[S('Scan',/./),S('Detect',/alert|suspic|found|new/i),S('Report',/./)],kind:'items'},
+{id:'sph',name:'Phishing Triage',team:'security',em:'🎣',rx:/^(\[secTriage\]|Phishing)/i,win:120,steps:[S('Scan',/./),S('Deep-check',/deep|check/i),S('Report',/./)],kind:'items'},
+{id:'sim',name:'Impersonation Hunter',team:'security',em:'🕵️',rx:/^(\[secImperson\]|Brand|Impersonation)/i,win:240,steps:[S('Scan',/./),S('Detect',/lookalike|found|alert/i),S('Report',/./)],kind:'items'},
 {id:'sg',name:'Security Guard',team:'security',em:'🛡️',rx:/^Security Guard/,win:70,steps:[S('Scan',/scan|check|watch/i),S('Detect',/alert|suspic|detect|found/i),S('Fix',/fix|block|revoke|secure/i),S('Report',/report|log/i)],kind:'items'}
 ];
 const BYID={};AG.forEach(a=>BYID[a.id]=a);
@@ -343,7 +349,7 @@ function track(a,big){
     return `<div class="stp ${c}${nx}${go}${big&&stepSel===i?' sel':''}" ${big?`data-step="${i}"`:''}>${a.sc[i]?`<span class="ct">${a.sc[i]}</span>`:''}<div class="nd">${c==='done'?'✓':i+1}</div><small>${esc(s[0])}</small></div>`}).join('')+'</div>';
 }
 const ST={live:'Active',quiet:'Quiet today',silent:'Silent',waiting:'Waiting'};
-const strip=m=>m.replace(/^(?:Reply Watch|Outreach|Follow-up|Comment|Lead search|Lead finder|Social|Channel Watch|Creative Dept|Reviewer|Security Guard|Ops Manager|Head of Performance|God Squad|AI News Scout|New Tool Scout|SEO Specialist)\b\s*(?:\([^)]*\))?\s*:?\s*(?:\([^)]*\))?\s*/i,'');
+const strip=m=>m.replace(/^(?:Reply Watch|Outreach|Follow-up|Comment|Lead search|Lead finder|Social|Channel Watch|Creative Dept|Reviewer|Security Guard|Ops Manager|Head of Performance|God Squad|AI News Scout|New Tool Scout|SEO Specialist|Trend Brain|Offer Strategist|Promise Keeper)\b\s*(?:\([^)]*\))?\s*:?\s*(?:\([^)]*\))?\s*/i,'');
 function nice(m){return cut(strip(m),200)}
 function card(a){
   const now=a.last?nice(a.last.m):(a.planned?'Not reporting yet — lights up when it logs its first run.':'No activity in the log.');
