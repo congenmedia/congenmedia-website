@@ -187,7 +187,7 @@ nav .bd[hidden],.ico .bd[hidden]{display:none}
   <div><h3>Account inventory <small class="mono">where each Gmail is signed in or has given app access</small></h3><div class="tiles" id="invtiles"></div></div></section>
 <section class="view" id="v-know"><div class="vh"><button class="chip back" data-nav="more">← All</button><h2>Knowledge Hub</h2><span class="mono" id="knowwhen"></span></div>
   <p class="dim" style="margin:0">Everything the agents research, saved for every client job. Type a niche, brand, company or YouTuber.</p>
-  <div class="tiles" id="knowtiles"></div><div class="chips" id="knowchips"></div><input class="srch" type="text" data-q="know" placeholder="Search: fitness, crypto, MrBeast, AI video, thumbnail…"><div class="feed" id="knowlist"></div></section>
+  <div class="tiles" id="knowtiles"></div><div class="chips" id="knowchips"></div><input class="srch" type="text" data-q="know" placeholder="Search: Dubai, real estate, thumbnail rule, offer, Team Room…"><div class="feed" id="knowlist"></div></section>
 <section class="view" id="v-hub"><div class="vh"><button class="chip back" data-nav="more">← All</button><h2>Hub</h2></div>
   <input class="srch" type="text" data-q="hub" placeholder="Search every Con-Gen link"><div id="hublist"></div></section>
 
@@ -488,7 +488,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mcp)load(
 
 /* ---------------- all sections ---------------- */
 const FLT={pipe:'all',soc:'all',cloud:'all',pc:'all',sec:'all',know:'all',q_pipe:'',q_team:'',q_cloud:'',q_hub:'',q_know:''};
-const MENU=[['know','📚','Knowledge Hub','All research: news, tools, SEO, niches, creators'],['hq','🗺️','HQ Map','Who is who and who is working'],['pipe','🎯','Pipeline','Leads, emails sent, replies'],['team','👥','Team','Every agent: job and status'],['soc','💗','Social','Likes, comments, followers'],['cloud','☁️','Cloud log','Everything agents did, live'],['pc','📎','Paperclip','Agents on your PC'],['sec','🛡️','Security','Threats and accounts'],['hub','🔗','Hub','Every important link']];
+const MENU=[['know','📚','Knowledge Hub','Research, Team Room, creative rules, trending offers, brand drafts'],['hq','🗺️','HQ Map','Who is who and who is working'],['pipe','🎯','Pipeline','Leads, emails sent, replies'],['team','👥','Team','Every agent: job and status'],['soc','💗','Social','Likes, comments, followers'],['cloud','☁️','Cloud log','Everything agents did, live'],['pc','📎','Paperclip','Agents on your PC'],['sec','🛡️','Security','Threats and accounts'],['hub','🔗','Hub','Every important link']];
 const LAZY=['team','soc','pc','sec','hub','know'];
 const chipRow=(key,opts)=>opts.map(([k,l])=>`<button class="chip ${FLT[key]===k?'on':''}" data-f="${key}:${k}">${l}</button>`).join('');
 const linkBtn=(u,t)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t||(u.split('/')[2]||'link').replace(/^www\./,''))} ↗</a>`;
@@ -554,7 +554,7 @@ function paintHub(){
   const f=rows.filter(r=>!q||r.join(' ').toLowerCase().includes(q)),cats=[...new Set(f.map(r=>r[0]))];
   $('hublist').innerHTML=cats.map(c=>`<div style="margin-bottom:14px"><h3>${esc(c)} <small class="mono">${f.filter(r=>r[0]===c).length}</small></h3><div class="feed">${f.filter(r=>r[0]===c).map(r=>/^https?:\/\//.test(r[2])?`<a class="fi" href="${esc(r[2])}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><span class="tx"><p><b>${esc(r[1])}</b></p><span class="mono">${esc(cut(r[3],100))}</span></span></a>`:`<div class="fi"><span class="tx"><p><b>${esc(r[1])}</b></p><span class="mono">${esc(cut(r[3]||'No link logged yet',100))}</span></span></div>`).join('')}</div></div>`).join('')||'<div class="empty">No link matches.</div>';
 }
-const KT={news:['📰','AI News'],tools:['🧰','New tools'],seo:['🔍','SEO & algorithm'],trend:['🔥','Trends'],niche:['📖','Niche Library'],dos:['👤','Creators & brands'],imp:['📈','Improvements']};
+const KT={room:['🗣️','Team Room'],brands:['🎯','Brand drafts'],offers:['💡','Trending offers'],rules:['🧠','Creative rules'],news:['📰','AI News'],tools:['🧰','New tools'],seo:['🔍','SEO & algorithm'],trend:['🔥','Trends'],niche:['📖','Niche Library'],dos:['👤','Creators & brands'],imp:['📈','Improvements']};
 function knowItems(){
   const K=D.know||{},o=[],r=(a,i)=>T((a||[])[i]);
   (K.trend||[]).slice(1).forEach(x=>{const news=/ai-news/i.test(r(x,2));o.push({k:news?'news':'trend',d:r(x,0),h:r(x,3),s:news?r(x,7):[r(x,5),r(x,6),r(x,7)].filter(Boolean).join(' · '),u:r(x,4),x:r(x,1)})});
@@ -562,6 +562,11 @@ function knowItems(){
   (K.seo||[]).slice(1).forEach(x=>o.push({k:'seo',d:r(x,0),h:r(x,3),s:[r(x,1),r(x,2),r(x,5)].filter(Boolean).join(' · '),u:r(x,4),x:''}));
   (K.niche||[]).slice(1).forEach(x=>{if(!r(x,3))return;o.push({k:'niche',d:r(x,0),h:r(x,1)+(r(x,2)?' · '+r(x,2):''),s:r(x,3)+(r(x,4)?'\n→ '+r(x,4):''),u:r(x,5),x:r(x,6)})});
   (K.dos||[]).slice(1).forEach(x=>{if(!r(x,1))return;o.push({k:'dos',d:'',h:r(x,1),s:x.slice(3).map(T).filter(Boolean).join(' · ').slice(0,400),u:r(x,2),x:''})});
+  const dk=s=>{s=T(s);const m=/(\d{4}-\d\d-\d\d)/.exec(s);if(m)return m[1];const t=Date.parse(s);return isNaN(t)?'':day(t)};
+  (K.room||[]).slice(1).forEach(x=>{if(!r(x,3))return;o.push({k:'room',d:dk(r(x,0)),h:r(x,1)+': '+r(x,3),s:'',u:'',x:r(x,2)})});
+  (K.rules||[]).slice(1).forEach(x=>{if(!r(x,4))return;o.push({k:'rules',d:dk(r(x,0)),h:r(x,4),s:[r(x,1),r(x,2),r(x,3)].filter(Boolean).join(' · ')+(r(x,5)?'\nWhy: '+r(x,5):''),u:(/https?:\/\/\S+/.exec(r(x,6))||[''])[0],x:r(x,3)})});
+  (K.offers||[]).slice(1).forEach(x=>{if(!r(x,2))return;o.push({k:'offers',d:dk(r(x,0)),h:r(x,1)+': '+r(x,2),s:[r(x,4),r(x,5)?'Demo: '+r(x,5):'',r(x,6)?'Price: '+r(x,6):''].filter(Boolean).join('\n'),u:'',x:r(x,8)})});
+  (K.brands||[]).slice(1).forEach(x=>{if(!r(x,0))return;o.push({k:'brands',d:'',h:r(x,0)+' · '+r(x,1)+' · '+r(x,2),s:r(x,4)+(r(x,5)?'\nDM: '+r(x,5):'')+(r(x,9)?'\nEmail: '+r(x,9):''),u:(/@([\w.]+)/.exec(r(x,3))||[])[1]?'https://instagram.com/'+(/@([\w.]+)/.exec(r(x,3))||[])[1]:'',x:r(x,6)})});
   (K.imp||[]).slice(1).forEach(x=>{if(!r(x,3))return;o.push({k:'imp',d:r(x,0).slice(0,10),h:r(x,1),s:r(x,3)+(r(x,5)?'\nResult: '+r(x,5):''),u:r(x,4),x:''})});
   return o;
 }
@@ -569,7 +574,7 @@ function paintKnow(){
   if(!D.know){$('knowlist').innerHTML='<div class="empty">'+(D.err_know?esc(mcpErr(D.err_know)):'Reading the Knowledge Hub…')+'</div>';$('knowtiles').innerHTML='';$('knowchips').innerHTML='';return}
   const I=knowItems(),today=day(Date.now()),fresh=I.filter(i=>i.d===today);
   $('knowwhen').textContent=D.knowAt?'updated '+ago(D.knowAt):'';
-  $('knowtiles').innerHTML=[[fresh.length,'new today',fresh.length?'hot':''],[I.filter(i=>i.k==='news').length,'AI news saved',''],[I.filter(i=>i.k==='tools').length,'tools found',''],[I.filter(i=>i.k==='niche'||i.k==='dos').length,'niche + creator facts','']].map(t=>`<div class="tile ${t[2]}"><b>${t[0]}</b><span>${t[1]}</span></div>`).join('');
+  $('knowtiles').innerHTML=[[fresh.length,'new today',fresh.length?'hot':''],[I.filter(i=>i.k==='news').length,'AI news saved',''],[I.filter(i=>i.k==='tools').length,'tools found',''],[I.filter(i=>i.k==='brands'&&/^DRAFT|^APPROVED/i.test(i.x)).length,'brand drafts need AK OK',I.some(i=>i.k==='brands'&&/^DRAFT/i.test(i.x))?'hot':''],[I.filter(i=>i.k==='rules').length,'creative rules',''],[I.filter(i=>i.k==='offers').length,'trending offers','']].map(t=>`<div class="tile ${t[2]}"><b>${t[0]}</b><span>${t[1]}</span></div>`).join('');
   $('knowchips').innerHTML=chipRow('know',[['all','All'],['today','New today'],...Object.keys(KT).map(k=>[k,KT[k][1]])]);
   const q=FLT.q_know.toLowerCase().trim();
   const f=I.filter(i=>(FLT.know==='all'||(FLT.know==='today'?i.d===today:i.k===FLT.know))&&(!q||(i.h+' '+i.s+' '+i.x).toLowerCase().includes(q)));
@@ -579,7 +584,7 @@ function paintKnow(){
 }
 async function loadKnow(fresh){
   const tl=(t,c2,k)=>tail(t,'A',c2,k,fresh).then(x=>x.rows.length>=x.n?x.rows:[[]].concat(x.rows));
-  const J={trend:tl('Trend Log','H',250),tools:tl("'Free Models & Tools Lab'",'G',150),seo:tl('SEO Log','F',120),niche:tl('Niche Library','H',400),dos:rd('Dossiers!A1:H500',fresh),imp:tl('Improvements','F',80)};
+  const J={trend:tl('Trend Log','H',250),tools:tl("'Free Models & Tools Lab'",'G',150),seo:tl('SEO Log','F',120),niche:tl('Niche Library','H',400),dos:rd('Dossiers!A1:H500',fresh),imp:tl('Improvements','F',80),room:tl('Team Room','D',150),rules:tl('Creative Rules','H',300),offers:rd('Offer Playbook!A1:I200',fresh),brands:rd('PK Brands!A1:K100',fresh)};
   const ks=Object.keys(J),res=await Promise.allSettled(ks.map(k=>J[k]));
   if(res.every(x=>x.status==='rejected'))throw res[0].reason;
   const o={};res.forEach((x,i)=>{o[ks[i]]=x.status==='fulfilled'?x.value:[]});D.know=o;D.knowAt=new Date().toISOString();
