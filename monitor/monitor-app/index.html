@@ -91,6 +91,7 @@ nav .bd[hidden],.ico .bd[hidden]{display:none}
 @keyframes slide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 .fi .em{font-size:19px;flex:none;margin-top:1px}.fi .tx{min-width:0;flex:1}
 .fi .tx p{margin:0;overflow-wrap:anywhere;font-size:13px}.fi .tx .mono{display:block}
+.sk{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0}.sk summary{cursor:pointer;font-size:13.5px;list-style:none}.sk summary::-webkit-details-marker{display:none}
 .tag{display:inline-flex;font-size:11px;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--dim);margin-right:5px}
 .tag.ok{color:#8ff0b2;border-color:rgba(34,197,94,.5)}.tag.warn{color:#ffd58a;border-color:rgba(245,158,11,.5)}.tag.bad{color:#ff9c9c;border-color:rgba(239,68,68,.55)}.tag.info{color:#c9b8ff;border-color:rgba(124,58,237,.6)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:9px;min-width:0}
@@ -295,7 +296,7 @@ async function tail(tab,c1,c2,keep,fresh){
 async function load(fresh){
   if(!mcp||busy)return;busy=true;meta.state=first?'loading':'refreshing';paintStatus();
   try{
-    const jobs={cl:tail('Cloud Log','A','B',400,fresh).then(x=>x.rows),cls:rd('Cloud Leads!A1:H3000',fresh),so:tail('Social Live','A','B',1,fresh).then(x=>x.rows.length?{a:[[x.rows[0][0]]],b:[[x.rows[0][1]]]}:null),bd:tail('Agent Board','A','H',140,fresh),plan:rd('50 Content Plan!A1:M200',fresh),reg:rd('Agent Registry!A1:L200',fresh)};
+    const jobs={cl:tail('Cloud Log','A','B',400,fresh).then(x=>x.rows),cls:rd('Cloud Leads!A1:H3000',fresh),so:tail('Social Live','A','B',1,fresh).then(x=>x.rows.length?{a:[[x.rows[0][0]]],b:[[x.rows[0][1]]]}:null),bd:tail('Agent Board','A','H',140,fresh),plan:rd('50 Content Plan!A1:M200',fresh),reg:rd('Agent Registry!A1:L200',fresh),skl:(D.skl&&!fresh&&!first)?Promise.resolve(D.skl):rd('Skills Library!A1:D150',fresh),tr:tail('Team Room','A','D',40,fresh).then(x=>x.rows)};
     const keys=Object.keys(jobs),res=await Promise.allSettled(keys.map(k=>jobs[k]));
     if(res.every(x=>x.status==='rejected'))throw res[0].reason;
     res.forEach((x,i)=>{if(x.status==='fulfilled')D[keys[i]]=x.value});
@@ -370,7 +371,7 @@ const strip=m=>m.replace(/^[A-Z][\w &()\/-]{2,60}?:\s*/,'').replace(/^(?:Reply W
 function nice(m){return cut(strip(m),200)}
 function card(a){
   const now=a.last?nice(a.last.m):(a.planned?'Not reporting yet — lights up when it logs its first run.':'No activity in the log.');
-  return `<button class="ag ${a.state==='live'?'live':''}" data-ag="${a.id}"><div class="hd"><span class="em">${a.em}</span><span class="nm">${esc(a.name)}</span><span class="st ${a.state}">${ST[a.state]}</span></div>${track(a,false)}<div class="nw">${esc(now)}</div><div class="ft"><span>${a.last?(a.work?'working now':ago(a.last.t)):'—'}</span><span>${a.today} today</span></div></button>`;
+  return `<button class="ag ${a.state==='live'?'live':''}" data-ag="${a.id}"><div class="hd"><span class="em">${a.em}</span><span class="nm">${esc(a.name)}</span><span class="st ${a.state}">${ST[a.state]}</span></div>${track(a,false)}<div class="nw">${esc(now)}</div>${newSkills(a)?`<div><span class="tag info">+${newSkills(a)} new skills · ${agSkills(a).length} total</span></div>`:''}<div class="ft"><span>${a.last?(a.work?'working now':ago(a.last.t)):'—'}</span><span>${a.today} today</span></div></button>`;
 }
 function paintLive(){
   const today=day(Date.now()),live=AG.filter(a=>a.state==='live').length,tot=AG.filter(a=>!a.planned||a.last).length;
@@ -412,6 +413,21 @@ function paintMore(){
 }
 function paintAll(){paintStatus();paintGate();paintLive();paintReplies();paintDecide();paintMore();paintBadges();if(openId)paintSheet();if(!['live','rep','dec','chat'].includes(view))paintView(view)}
 
+/* ---------------- skills on every agent (Skills Library + Agent Registry col G) ---------------- */
+const B2R={ak:'AK-00',lg:'LG',ot:'OT',ov:'OV',ls:'LS',gs:'GM-P',fu:'FU',rw:'RW',cc:'CR',sw:'SW',cw:'CW',cr:'CD-00',seo:'SEO',news:'AIN',tools:'NTS',rv:'DC',hp:'PERF',om:'OPS',tb:'TB',rh:'RH',os:'OS',pk:'PK',sot:'OAW',sph:'PHT',sim:'IMH',sg:'SG'};
+const SKNEW=/^SK(4[89]|5\d)$/;
+function regRows(){return (D.reg||[]).slice(1).filter(r=>T(r[0]))}
+function regRow(a){const id=a.reg?a.reg.id:B2R[a.id];return id?regRows().find(r=>T(r[0])===id):null}
+function skillMap(){const m={};(D.skl||[]).slice(1).forEach(r=>{if(T(r[0]))m[T(r[0])]={n:T(r[1]),t:T(r[2]),src:T(r[3])}});return m}
+function agSkills(a){if(a.id==='eng')return Object.keys(skillMap());const r=regRow(a);return r?T(r[6]).split(',').map(T).filter(Boolean):[]}
+function holders(sk){return regRows().filter(r=>T(r[6]).split(',').map(T).includes(sk)).map(r=>T(r[1]))}
+function newSkills(a){return agSkills(a).filter(i=>SKNEW.test(i)).length}
+function skillsCard(a){
+  let ids=agSkills(a);if(!ids.length)return '';const M=skillMap(),nw=ids.filter(i=>SKNEW.test(i)).length;
+  ids=ids.slice().sort((x,y)=>(SKNEW.test(y)-SKNEW.test(x))||y.localeCompare(x));
+  return `<div><h3>Skills &amp; rules <small class="mono">${ids.length}${nw?' · '+nw+' new':''}</small></h3><div class="feed">${ids.map(i=>{const s=M[i]||{n:'',t:'',src:''};const h=holders(i);return `<details class="sk"><summary><b>${esc(i)}</b> ${esc(s.n)} ${SKNEW.test(i)?'<span class="tag info">NEW 25 Nov</span>':''}</summary><p class="dim" style="font-size:12.5px">${esc(s.t)}</p><p class="mono" style="font-size:11.5px">Source: ${esc(s.src)} · ${h.length} agents: ${esc(h.join(', '))}</p></details>`}).join('')}</div></div>`;
+}
+function updatesCard(){const R=(D.tr||[]).filter(r=>/^(Claude \(for AK\)|AK)/i.test(T(r[1]))).slice(-3).reverse();if(!R.length)return '';return `<div class="card"><h3>Latest updates for all agents</h3>${R.map(r=>`<p style="font-size:13px"><span class="tag ${T(r[2])==='ALERT'?'warn':'info'}">${esc(T(r[2]))}</span> ${esc(cut(T(r[3]),700))} <span class="mono">${esc(T(r[0]))}</span></p>`).join('')}</div>`}
 /* ---------------- agent detail ---------------- */
 function openAgent(id,keepStep){openId=id;if(!keepStep)stepSel=null;paintSheet();$('sh').classList.add('on');$('bk').classList.add('on');$('sh').setAttribute('aria-hidden','false')}
 function closeSheet(){openId=null;$('sh').classList.remove('on');$('bk').classList.remove('on');$('sh').setAttribute('aria-hidden','true')}
@@ -436,7 +452,7 @@ function paintSheet(){
   if(stepSel!=null){const st=a.steps[stepSel];tl=tl.filter(r=>{const b=strip(r.m);for(let i=0;i<a.steps.length;i++){if(a.steps[i][1].test(b))return i===stepSel}return false});head='Step “'+st[0]+'”'}
   const scroll=$('shb').scrollTop;
   $('shb').innerHTML=`<div class="card"><div class="mono">Tap a step to see exactly what happened there</div>${track(a,true)}<p class="dim" style="font-size:13px">${a.last?esc(nice(a.last.m)):'No activity yet.'}</p></div>`
-   +(stepSel==null?results(a):'')
+   +(stepSel==null?updatesCard()+skillsCard(a)+results(a):'')
    +`<div><h3>${head} <small class="mono">${tl.length}</small>${stepSel!=null?' <button class="chip" data-step="clear" style="min-height:28px;padding:2px 10px">show all</button>':''}</h3><div class="feed">${tl.slice(0,60).map(r=>`<div class="fi"><span class="tx"><p>${esc(cut(r.m,420))}</p><span class="mono">${tm(r.t)} PKT · ${ago(r.t)}${day(r.t)===today?'':' · '+day(r.t)}</span></span></div>`).join('')||'<div class="empty">Nothing logged for this step yet.</div>'}</div></div>`;
   $('shb').scrollTop=scroll;
 }
