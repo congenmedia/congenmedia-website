@@ -1,0 +1,16 @@
+# Con-Gen Media
+
+> Con-Gen Media is a digital media agency founded by Asim Yousafzai (AK Yousafzai). It edits YouTube videos, Shorts and reels, and makes motion graphics, thumbnails and ad creatives for creators and brands worldwide.
+
+## Pages
+- [Home](https://www.congenmedia.com/): agency overview and showreel
+- [Services](https://www.congenmedia.com/services): video editing, Shorts, motion graphics, thumbnails, ad creatives
+- [Packages](https://www.congenmedia.com/packages): packages for creators and brands
+- [Work](https://www.congenmedia.com/work): portfolio
+- [Founder](https://www.congenmedia.com/founder): Asim Yousafzai
+- [Motion Prompts](https://www.congenmedia.com/prompts/): free motion-design prompts
+- [Blog](https://www.congenmedia.com/blog/): video editing and AI tools guides
+
+## Contact
+- Email: congenmedia@gmail.com
+- Instagram: https://www.instagram.com/congenmedia/
