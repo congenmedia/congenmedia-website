@@ -225,9 +225,9 @@ const OUT=[S('Pick lead',/pick|next lead|queue|lead:/i),S('Study',/research|anal
 const BASE=[
 {id:'ak',name:'AK - Board Director',team:'board',em:'👑',rx:/^(AK - Board Director|Board Director)/,win:40,steps:[S('Check A-Z',/check|silent|decide/i),S('Decide',/decision|orders?|warn/i),S('Improve',/improve|replaced|daily/i)],kind:'items'},
 {id:'eng',name:'Agent Engine',team:'board',em:'⚙️',rx:/^Agent Engine/,win:30,steps:[S('Pick due agents',/due/i),S('Run',/ran/i)]},
-{id:'lg',name:'Lead Gate',team:'outreach',em:'🚧',rx:/^Lead Gate/,win:60,steps:[S('Check face',/checked/i),S('Check country',/country/i),S('Pass / reject',/PASS|reject/i)],kind:'items'},
-{id:'ot',name:'Outreach · Thumbnail',team:'outreach',em:'🖼️',rx:/^Outreach \(Thumbnail team\)/,win:90,steps:OUT,kind:'sent'},
-{id:'ov',name:'Outreach · Video',team:'outreach',em:'🎬',rx:/^Outreach \(Video team\)/,win:90,steps:OUT,kind:'sent'},
+{id:'lg',name:'Lead Gate',team:'outreach',em:'🚧',rx:/^(Lead Gate|Lead gate|Gate:)/,win:60,steps:[S('Check face',/checked/i),S('Check country',/country/i),S('Pass / reject',/PASS|reject/i)],kind:'items'},
+{id:'ot',name:'Outreach · Thumbnail',team:'outreach',em:'🖼️',rx:/^(Outreach \(Thumbnail team\)|Outreach: no lead)/,win:90,steps:OUT,kind:'sent'},
+{id:'ov',name:'Outreach · Video',team:'outreach',em:'🎬',rx:/^(Outreach \(Video team\)|Outreach: no lead)/,win:90,steps:OUT,kind:'sent'},
 {id:'ls',name:'Lead Search',team:'outreach',em:'🔎',rx:/^(Lead search|Lead finder)/,win:45,steps:[S('Search',/search|scan|query|finder/i),S('Check',/check|verify|filter|skipp|off-niche|country|gate/i),S('Save',/new lead|added|saved|found|\+\d/i)],kind:'leads'},
 {id:'gs',name:'God Squad (outreach)',team:'outreach',em:'🧠',rx:/^God Squad/,win:150,steps:[S('Study',/study|analy|research|channel/i),S('Psychology',/psych|angle|hook/i),S('Brief',/brief|plan|subject/i),S('Hand-off',/hand|send|ready|done/i)]},
 {id:'fu',name:'Follow-up',team:'inbox',em:'🔁',rx:/^Follow-up/,win:90,steps:[S('Find due',/due|find|pick|queue/i),S('Write',/draft|writ|subject/i),S('Send',/SENT/),S('Log',/log|sheet|saved/i)],kind:'sent'},
